@@ -1,26 +1,27 @@
-version: "2.1"
+version: "3.8"
 services:
   wireguard:
-    image: ghcr.io/linuxserver/wireguard
+    image: linuxserver/wireguard
     container_name: wireguard
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
     environment:
-      - PUID=1000
+      - PUID=1000 #PID of your user
       - PGID=1000
-      - TZ=Russia/Moscow
-      - SERVERURL=132.226.202.136 #my external ip or FQDN
-      - SERVERPORT=51820 #PORT
-      - PEERS=2 #optional
+      - TZ=Europe/Moscow
+      - SERVERURL= auto #wg.aa-bb.ru #optional external ip or domain name
+      - SERVERPORT=51820 #optional
+      - PEERS=5 #optional
       - PEERDNS=auto #optional
-      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - INTERNAL_SUBNET=10.10.0.0 #optional
       - ALLOWEDIPS=0.0.0.0/0 #optional
     volumes:
       - ./config:/config
-      - /lib/modules:/lib/modules
+      - /usr/lib/modules:/lib/modules
+      - /usr/src:/usr/src
     ports:
       - 51820:51820/udp
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
-    restart: unless-stopped
+    restart: always
